@@ -1,0 +1,53 @@
+-- Table: public.rol
+
+-- DROP TABLE public.rol;
+
+CREATE TABLE public.rol
+(
+    rol_id integer NOT NULL,
+    nombre character varying(20)[] COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT rol_pkey PRIMARY KEY (rol_id),
+    CONSTRAINT rol_nombre_key UNIQUE (nombre)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.rol
+    OWNER to postgres;
+COMMENT ON TABLE public.rol
+    IS 'rol_id(IDI del rol)
+nombre (nombre del rol)';
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Table: public."user"
+
+-- DROP TABLE public."user";
+
+CREATE TABLE public."user"
+(
+    username character varying(50)[] COLLATE pg_catalog."default" NOT NULL,
+    usuario_id integer NOT NULL,
+    password character varying(50)[] COLLATE pg_catalog."default" NOT NULL,
+    rol_id integer NOT NULL,
+    CONSTRAINT user_pkey PRIMARY KEY (usuario_id, username),
+    CONSTRAINT user_rol_id_fkey FOREIGN KEY (rol_id)
+        REFERENCES public.rol (rol_id) MATCH SIMPLE
+        ON UPDATE RESTRICT
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public."user"
+    OWNER to postgres;
+COMMENT ON TABLE public."user"
+    IS 'Tabla que almacena Usuario
+usuario_id (id del usuario, se debe insertar en las tablas cutomer y employee)
+usuario (nombre de usuario, unico)
+password (contrasena)
+rol_id (ID del rol al que pertenece)';
